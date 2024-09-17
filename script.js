@@ -1,7 +1,6 @@
 const canvas = document.getElementById('waterCanvas');
 const ctx = canvas.getContext('2d');
 
-// Function to set canvas dimensions and ensure it fills the container properly
 function setCanvasDimensions() {
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
@@ -10,20 +9,29 @@ function setCanvasDimensions() {
 setCanvasDimensions(); // Initialize the canvas dimensions
 
 const numPoints = 100;
-const initialWaterHeight = canvas.height * 0.5;
-let points = new Array(numPoints).fill(initialWaterHeight);
+const defaultValues = {
+    waveSpeed: 0.035,
+    mouseRadius: 40,
+    damping: 0.95,
+    maxMouseDistance: 40
+};
+
+let points = new Array(numPoints).fill(canvas.height * 0.5);
 let velocities = new Array(numPoints).fill(0);
-const damping = 0.95;
-const waveSpeed = 0.02;
-const equilibriumReturnRate = 0.005;
+let waveSpeed = defaultValues.waveSpeed;
+let mouseRadius = defaultValues.mouseRadius;
+let damping = defaultValues.damping;
+let maxMouseDistance = defaultValues.maxMouseDistance;
 
 let mouseX = null;
 let mouseY = null;
+let mousePrevX = null;
+let mousePrevY = null;
+let mouseVelocityX = 0;
+let mouseVelocityY = 0;
 let mouseActive = false;
-let mouseRadius = 50;
-let maxMouseDistance = 50; // Maximum vertical distance for mouse interaction
-let lastMouseInteraction = 0; // Track the last time the mouse interacted
-const interactionTimeout = 100; // Time in milliseconds before mouse influence fades
+let lastMouseInteraction = 0;
+const interactionTimeout = 5;
 
 function getTotalArea() {
     let totalArea = 0;
@@ -35,7 +43,7 @@ function getTotalArea() {
 
 function adjustForVolume() {
     const currentArea = getTotalArea();
-    const targetArea = initialWaterHeight * numPoints;
+    const targetArea = canvas.height * 0.5 * numPoints;
     const areaDifference = targetArea - currentArea;
     const adjustmentPerPoint = areaDifference / numPoints;
 
@@ -54,22 +62,21 @@ function updateWater() {
         velocities[i] *= damping;
         points[i] += velocities[i];
 
-        // Check if the mouse is within the sphere of influence
         let currentTime = Date.now();
         if (mouseActive && (currentTime - lastMouseInteraction < interactionTimeout)) {
             let pointX = i * segmentWidth;
             let distX = Math.abs(pointX - mouseX);
             let distY = Math.abs(mouseY - points[i]);
 
-            // Only perturb the water if the mouse is within a close vertical range and radius
             if (distX < mouseRadius && distY < maxMouseDistance) {
-                // The closer the mouse is to the water point, the stronger the perturbation
-                let strength = 1 - (distY / maxMouseDistance); // Strength decreases with distance
-                velocities[i] += 0.03 * strength * (mouseY - points[i]);
+                let strength = 1 - (distY / maxMouseDistance);
+                let velocityImpact = (mouseVelocityY - velocities[i]) * 0.055 * strength;
+                velocities[i] += velocityImpact;
+                let displacement = 0.05 * strength * (mouseY - points[i]);
+                velocities[i] += displacement;
             }
         }
 
-        // Prevent points from going below the bottom of the canvas
         if (points[i] > canvas.height) {
             points[i] = canvas.height;
         }
@@ -78,7 +85,7 @@ function updateWater() {
     adjustForVolume();
 
     for (let i = 0; i < numPoints; i++) {
-        points[i] += equilibriumReturnRate * (initialWaterHeight - points[i]);
+        points[i] += 0.01 * (canvas.height * 0.5 - points[i]);
     }
 }
 
@@ -104,22 +111,30 @@ canvas.addEventListener('mousemove', (event) => {
     const rect = canvas.getBoundingClientRect();
     mouseX = event.clientX - rect.left;
     mouseY = event.clientY - rect.top;
-    lastMouseInteraction = Date.now(); // Update last interaction time
-    mouseActive = true; // Ensure the mouse is active while moving
+    lastMouseInteraction = Date.now();
+    mouseActive = true;
+
+    if (mousePrevX !== null && mousePrevY !== null) {
+        mouseVelocityX = mouseX - mousePrevX;
+        mouseVelocityY = mouseY - mousePrevY;
+    }
+
+    mousePrevX = mouseX;
+    mousePrevY = mouseY;
 });
 
 canvas.addEventListener('mousedown', () => {
     mouseActive = true;
-    lastMouseInteraction = Date.now(); // Track when the mouse starts interacting
+    lastMouseInteraction = Date.now();
 });
 
 canvas.addEventListener('mouseup', () => {
-    mouseActive = false; // Stop mouse interaction on mouse release
+    mouseActive = false;
 });
 
 window.addEventListener('resize', () => {
-    setCanvasDimensions(); // Update canvas size on window resize
-    points = new Array(numPoints).fill(initialWaterHeight); // Reset water points after resize
+    setCanvasDimensions();
+    points = new Array(numPoints).fill(canvas.height * 0.5);
 });
 
 function animate() {
@@ -129,3 +144,41 @@ function animate() {
 }
 
 animate();
+
+// Update sliders and reset button
+document.getElementById('waveSpeed').addEventListener('input', (event) => {
+    waveSpeed = parseFloat(event.target.value);
+    document.getElementById('waveSpeedValue').textContent = waveSpeed;
+});
+
+document.getElementById('mouseRadius').addEventListener('input', (event) => {
+    mouseRadius = parseFloat(event.target.value);
+    document.getElementById('mouseRadiusValue').textContent = mouseRadius;
+});
+
+document.getElementById('damping').addEventListener('input', (event) => {
+    damping = parseFloat(event.target.value);
+    document.getElementById('dampingValue').textContent = damping;
+});
+
+document.getElementById('maxMouseDistance').addEventListener('input', (event) => {
+    maxMouseDistance = parseFloat(event.target.value);
+    document.getElementById('maxMouseDistanceValue').textContent = maxMouseDistance;
+});
+
+document.getElementById('resetButton').addEventListener('click', () => {
+    document.getElementById('waveSpeed').value = defaultValues.waveSpeed;
+    document.getElementById('mouseRadius').value = defaultValues.mouseRadius;
+    document.getElementById('damping').value = defaultValues.damping;
+    document.getElementById('maxMouseDistance').value = defaultValues.maxMouseDistance;
+
+    waveSpeed = defaultValues.waveSpeed;
+    mouseRadius = defaultValues.mouseRadius;
+    damping = defaultValues.damping;
+    maxMouseDistance = defaultValues.maxMouseDistance;
+
+    document.getElementById('waveSpeedValue').textContent = waveSpeed;
+    document.getElementById('mouseRadiusValue').textContent = mouseRadius;
+    document.getElementById('dampingValue').textContent = damping;
+    document.getElementById('maxMouseDistanceValue').textContent = maxMouseDistance;
+});
