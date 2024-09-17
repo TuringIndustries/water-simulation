@@ -13,12 +13,25 @@
         <div class="logo">
             <img src="TuringLogo.jpg" alt="Turing Industries Logo" id="logo">
         </div>
-        <h1>Turing Industries Interactive Water Simulation</h1>
+        <h1>Turing Industries Ltd.</h1>
         <nav>
             <ul>
                 <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
+                <li class="dropdown">
+                    <a href="#">About</a>
+                    <div class="dropdown-content">
+                        <a href="#about">About Us</a>
+                        <a href="#team">Team</a>
+                        <a href="#history">History</a>
+                    </div>
+                </li>
                 <li><a href="#contact">Contact</a></li>
+                <li class="dropdown">
+                    <a href="#">Settings</a>
+                    <div class="dropdown-content">
+                        <a href="#settings">Adjust Parameters</a>
+                    </div>
+                </li>
             </ul>
         </nav>
         <div class="water-simulation">
@@ -36,11 +49,43 @@
             <h2>About Us</h2>
             <p>Our company is dedicated to pushing the boundaries of human-computer interaction.</p>
         </section>
+        
+        <section id="team">
+            <h2>Our Team</h2>
+            <p>Meet the brilliant minds behind our innovations.</p>
+        </section>
+        
+        <section id="history">
+            <h2>Our History</h2>
+            <p>Explore the milestones that shaped our journey.</p>
+        </section>
 
         <section id="contact">
             <h2>Contact Us</h2>
             <p>Email us at info@turingindustries.com for inquiries.</p>
         </section>
+
+		<section id="settings">
+			<h2>Adjust Water Simulation Parameters</h2>
+			<label for="waveSpeed">Wave Speed:</label>
+			<input type="range" id="waveSpeed" min="0.025" max="0.05" step="0.0002" value="0.035">
+			<span id="waveSpeedValue">0.035</span>
+
+			<label for="mouseRadius">Mouse Radius:</label>
+			<input type="range" id="mouseRadius" min="10" max="100" step="1" value="40">
+			<span id="mouseRadiusValue">40</span>
+
+			<label for="damping">Damping:</label>
+			<input type="range" id="damping" min="0.85" max="0.96" step="0.002" value="0.95">
+			<span id="dampingValue">0.95</span>
+
+			<label for="maxMouseDistance">Max Mouse Distance:</label>
+			<input type="range" id="maxMouseDistance" min="10" max="100" step="1" value="40">
+			<span id="maxMouseDistanceValue">40</span>
+
+			<button id="resetButton">Reset to Default</button>
+		</section>
+
     </div>
 
     <script src="script.js"></script>
