@@ -6,17 +6,22 @@ canvas.width = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
 
 // Constants for water simulation
-const numPoints = 200; // Number of points along the water surface
+const numPoints = 55; // Number of points along the water surface
 const defaultWaterHeightFactor = 0.5; // Initial water height factor (50% of canvas height)
-const damping = 0.98; // Friction to reduce wave velocity over time
-const tension = 0.025; // Restoring force (springiness) of the water waves
-const gravity = 0.1; // Simulated gravity to bring the water back down smoothly
-const viscosity = 0.99; // To slow down and smooth the wave motions
+const defaultDamping = 0.925; // Initial damping
+const defaultTension = 0.025; // Initial tension
+const defaultGravity = 0.05; // Initial gravity
+const defaultViscosity = 0.99; // Initial viscosity
 
 // Variables to hold the state of the water surface
 let points = new Array(numPoints).fill(0);
 let velocities = new Array(numPoints).fill(0);
 let waterHeight = canvas.height * defaultWaterHeightFactor;
+let damping = defaultDamping;
+let tension = defaultTension;
+let gravity = defaultGravity;
+let viscosity = defaultViscosity;
+let showSphere = true;
 
 // Mouse state for interaction
 let mouseX = null;
@@ -30,9 +35,10 @@ canvas.addEventListener('mousemove', (event) => {
 
     const segmentWidth = canvas.width / numPoints;
     const hoverIndex = Math.floor(mouseX / segmentWidth);
+    const sphereRadius = 50; // Radius of influence for the mouse
 
-    // Only disturb the water if the mouse is near the surface
-    if (hoverIndex >= 0 && hoverIndex < numPoints && Math.abs(points[hoverIndex] - mouseY) < 50) {
+    // Only disturb the water if the mouse is near the surface and within the sphere of influence
+    if (hoverIndex >= 0 && hoverIndex < numPoints && showSphere && Math.abs(points[hoverIndex] - mouseY) < sphereRadius) {
         velocities[hoverIndex] = -5; // Disturb the water at the mouse location
     }
 });
@@ -99,6 +105,15 @@ function renderWater() {
     ctx.lineTo(canvas.width, canvas.height);
     ctx.closePath();
     ctx.fill();
+
+    // Draw sphere of influence if enabled
+    if (showSphere) {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(mouseX, mouseY, 50, 0, Math.PI * 2);
+        ctx.stroke();
+    }
 }
 
 // Main animation loop
@@ -119,4 +134,50 @@ document.getElementById('waterHeightSlider').addEventListener('input', (e) => {
 
     // Reset the water surface to the new height
     initializeWater();
+});
+
+// Slider for controlling damping dynamically
+document.getElementById('dampingSlider').addEventListener('input', (e) => {
+    damping = parseFloat(e.target.value);
+});
+
+// Slider for controlling tension dynamically
+document.getElementById('tensionSlider').addEventListener('input', (e) => {
+    tension = parseFloat(e.target.value);
+});
+
+// Slider for controlling gravity dynamically
+document.getElementById('gravitySlider').addEventListener('input', (e) => {
+    gravity = parseFloat(e.target.value);
+});
+
+// Slider for controlling viscosity dynamically
+document.getElementById('viscositySlider').addEventListener('input', (e) => {
+    viscosity = parseFloat(e.target.value);
+});
+
+// Button to toggle visibility of the sphere of influence
+document.getElementById('tensionSlider').addEventListener('input', (e) => {
+    tension = parseFloat(e.target.value);
+});
+
+// Toggle sphere of influence visibility
+const sphereToggleBtn = document.getElementById('toggleSphereBtn');
+let sphereVisible = false;
+sphereToggleBtn.addEventListener('click', () => {
+    sphereVisible = !sphereVisible;
+});
+
+// Update mouse interaction
+canvas.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = event.clientX - rect.left;
+    mouseY = event.clientY - rect.top;
+
+    const segmentWidth = canvas.width / numPoints;
+    const hoverIndex = Math.floor(mouseX / segmentWidth);
+
+    if (hoverIndex >= 0 && hoverIndex < numPoints && sphereVisible && Math.abs(points[hoverIndex] - mouseY) < 50) {
+        velocities[hoverIndex] = -5;
+    }
 });
