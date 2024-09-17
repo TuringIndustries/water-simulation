@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Turing Industries | Water Simulation</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <header>
         <div class="logo">
-            <!-- Placeholder for the logo -->
-            <img src="turing-logo.png" alt="Turing Industries Logo" id="logo">
+            <img src="TuringLogo.jpg" alt="Turing Industries Logo" id="logo">
         </div>
         <h1>Turing Industries Interactive Water Simulation</h1>
         <nav>
@@ -20,33 +21,29 @@
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
+        <div class="water-simulation">
+            <canvas id="waterCanvas"></canvas>
+        </div>
     </header>
 
-    <div class="container">
-        <canvas id="waterCanvas"></canvas>
-    </div>
+    <div class="body-content">
+        <section id="home">
+            <h2>Welcome to Turing Industries</h2>
+            <p>Innovating the future with advanced interactive technologies.</p>
+        </section>
 
-    <!-- Sliders to control water behavior -->
-    <div class="controls">
-        <div class="slider-container">
-            <label for="waterHeightSlider">Water Height: </label>
-            <input type="range" id="waterHeightSlider" class="slider" min="0" max="1" step="0.01" value="0.5">
-        </div>
-        <div class="slider-container">
-            <label for="gravitySlider">Gravity: </label>
-            <input type="range" id="gravitySlider" class="slider" min="0" max="100" step="0.1" value="50">
-        </div>
-        <div class="slider-container">
-            <label for="dampingSlider">Damping: </label>
-            <input type="range" id="dampingSlider" class="slider" min="0.85" max="0.99" step="0.001" value="0.9">
-        </div>
-        <div class="slider-container">
-            <label for="tesnionSlider">Tension: </label>
-            <input type="range" id="tensionSlider" class="slider" min="0" max="0.095" step="0.001" value="0.0475">
-        </div>
-        <button id="toggleSphereBtn">Toggle Sphere of Influence</button>
+        <section id="about">
+            <h2>About Us</h2>
+            <p>Our company is dedicated to pushing the boundaries of human-computer interaction.</p>
+        </section>
+
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>Email us at info@turingindustries.com for inquiries.</p>
+        </section>
     </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>
