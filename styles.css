@@ -15,33 +15,48 @@ header {
     background-color: #111;
     color: white;
     text-align: center;
-    padding-top: 20px;
+    padding-top: 0;
     position: relative;
+    height: 250px; /* Updated height to accommodate water animation and title */
 }
 
 .logo img {
-    height: 80px; /* Adjusted size for a better fit */
+    height: 80px;
     position: absolute;
     left: 20px;
-    top: 10px;
+    top: 25%;
+    transform: translateY(-50%);
     width: auto;
 }
 
 h1 {
     font-size: 2.5rem;
-    margin: 60px 0 10px;
+    margin: 0;
     letter-spacing: 0.1rem;
+    position: absolute;
+    top: 16%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center title horizontally and vertically */
+    text-align: center;
+}
+
+nav {
+    position: absolute;
+    top: calc(27.5% + 10px); /* Adjust for the vertical position of the navigation */
+    left: 50%;
+    transform: translateX(-50%); /* Center navigation horizontally */
+	z-index: 4;
 }
 
 nav ul {
     list-style: none;
     display: flex;
-    justify-content: center;
-    padding: 10px 0;
+    padding: 0;
 }
 
 nav ul li {
     margin: 0 15px;
+    position: relative;
 }
 
 nav ul li a {
@@ -58,20 +73,46 @@ nav ul li a:hover {
     background-color: #333;
 }
 
-/* Water simulation container */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #111;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 4;
+    top: 100%; /* Position below the navigation item */
+    left: 50%;
+    transform: translateX(-50%); /* Center dropdown */
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #575757;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
 .water-simulation {
     width: 100%;
-    height: 120px; /* Smaller height to fit into the header */
-    margin-top: 10px;
-    position: relative; /* Ensure it stays in the header */
-    z-index: 1; /* Brings it above other elements */
+    height: 115px; /* Height for the water animation */
+    position: absolute;
+    bottom: 0; /* Position the water animation at the bottom of the header */
+    left: 0;
+    z-index: 1; /* Ensure it stays behind the header content */
 }
 
 canvas {
     width: 100%;
     height: 100%;
     display: block;
-    z-index: 1;
 }
 
 /* Responsive Layout Adjustments */
@@ -124,4 +165,46 @@ section p {
     font-size: 1.2rem;
     color: #333;
     line-height: 1.6;
+}
+
+/* Settings Section */
+#settings {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+#settings label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+#settings input[type="range"] {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#settings span {
+    display: inline-block;
+    width: 60px;
+    text-align: center;
+}
+
+#settings button {
+    background-color: #0077b6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+#settings button:hover {
+    background-color: #005f73;
 }
