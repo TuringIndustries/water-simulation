@@ -28,17 +28,23 @@
 
     <!-- Sliders to control water behavior -->
     <div class="controls">
-        <label for="waterHeightSlider">Water Height:</label>
-        <input type="range" id="waterHeightSlider" min="0.1" max="1.0" value="0.5" step="0.05">
-
-        <label for="gravitySlider">Gravity:</label>
-        <input type="range" id="gravitySlider" min="0.1" max="1.0" value="0.3" step="0.05">
-
-        <label for="dampingSlider">Damping:</label>
-        <input type="range" id="dampingSlider" min="0.9" max="1.0" value="0.98" step="0.01">
-
-        <label for="tensionSlider">Tension:</label>
-        <input type="range" id="tensionSlider" min="0.01" max="0.1" value="0.025" step="0.005">
+        <div class="slider-container">
+            <label for="waterHeightSlider">Water Height: </label>
+            <input type="range" id="waterHeightSlider" class="slider" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div class="slider-container">
+            <label for="gravitySlider">Gravity: </label>
+            <input type="range" id="gravitySlider" class="slider" min="0" max="100" step="0.1" value="50">
+        </div>
+        <div class="slider-container">
+            <label for="dampingSlider">Damping: </label>
+            <input type="range" id="dampingSlider" class="slider" min="0.85" max="0.99" step="0.001" value="0.9">
+        </div>
+        <div class="slider-container">
+            <label for="tesnionSlider">Tension: </label>
+            <input type="range" id="tensionSlider" class="slider" min="0" max="0.095" step="0.001" value="0.0475">
+        </div>
+        <button id="toggleSphereBtn">Toggle Sphere of Influence</button>
     </div>
 
     <script src="script.js"></script>
